@@ -30,7 +30,7 @@ async function fetchWorks() {
 
         filterButton.addEventListener('click', () => {
         // Filtrer les works en fonction de la catégorie sélectionnée
-        const filteredWorks = works.filter((work) => work.category === category);
+        const filteredWorks = works.filter((work) => work.category.name === category);
          console.log(filteredWorks);
         // Faites quelque chose avec les works filtrés, comme les afficher sur la page
         });
@@ -57,14 +57,14 @@ async function fetchWorks() {
         // Création des éléments composant la fiche
         const imageElement = document.createElement("img");
         imageElement.src = element.imageUrl;
-        imageElement.setAttribute("alt",`${element.title}`)
+        imageElement.setAttribute("alt",`${element.title}`);
         const titreElement = document.createElement("figcaption");
         titreElement.innerText = element.title;
         
         
         // Rattachement des balises
         // On rattache la balise article à la section Fiches
-                galleryWorks.appendChild(workElement)
+                galleryWorks.appendChild(workElement);
                 workElement.appendChild(imageElement);
                 workElement.appendChild(titreElement);
     

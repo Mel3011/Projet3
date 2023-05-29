@@ -135,7 +135,7 @@ li:hover {
 	margin: 50px 0px;
 }
 
-.filter p, button {
+.filter p {
 	border: 1px solid #1D6154;
 	border-radius: 50px;
 	text-align: center;
@@ -147,9 +147,10 @@ li:hover {
 }
 
 
-.filter p, button:hover {
+.filter p:hover {
 	background-color: #1D6154;
 	color: #ffffff;
+	cursor: pointer;
 }
 
 .gallery {

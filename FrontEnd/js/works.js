@@ -10,71 +10,89 @@ async function fetchWorks() {
       for (let i = 0; i < works.length; i++) {
         const work = works[i];
         const category = work.category.name;
-  
-        categories.add(category); // Ajout de la catégorie à l'objet Set pour obtenir les catégories uniques
+        console.log(category);
+
+        // Ajout de la catégorie obtenue à l'objet Set pour obtenir les catégories uniques
+        categories.add(category); 
       }
+      
+      // Création de la barre de filtres
+      const filterBar = document.querySelector(".filter");
 
-      // Parcourir les catégories uniques
-        categories.forEach((category) => {
-        });
-        console.log(categories);
+      // Création du bouton Tous
+      const allButton = document.createElement("p");
+      allButton.textContent = "Tous";
+      filterBar.appendChild(allButton);
+      
+      //Affichage de tous les works au clic sur bouton tous
+      allButton.addEventListener('click', () => {
+        const galleryWorks = document.querySelector(".gallery");
+        galleryWorks.innerHTML = "";
 
-        // Création de la barre de filtres
-        const filterBar = document.createElement('div');
-        filterBar.classList.add('filter');
-        // Création des boutons de filtre pour chaque catégorie
-        categories.forEach((category) => {
-         const filterButton = document.createElement('button');
-         filterButton.textContent = category;
-         
-
-        filterButton.addEventListener('click', () => {
-        // Filtrer les works en fonction de la catégorie sélectionnée
-        const filteredWorks = works.filter((work) => work.category.name === category);
-         console.log(filteredWorks);
-        // Faites quelque chose avec les works filtrés, comme les afficher sur la page
-        });
-  
-        filterBar.appendChild(filterButton);
-
-        
-     });
-
-    // Récupération de la class 
-    const filterContainer = document.querySelector(".filter");
-    filterContainer.appendChild(filterBar);
-  
-    //Création des fiches works
-    // Récupération de la class 
-    const galleryWorks = document.querySelector(".gallery");
-
-      for (let i = 0; i < works.length; i++) {
-        const element = works[i];
-        console.log(element); // Afficher le work
-
-        // Création de la fiche pour un work
-        const workElement = document.createElement("figure");
-        // Création des éléments composant la fiche
-        const imageElement = document.createElement("img");
-        imageElement.src = element.imageUrl;
-        imageElement.setAttribute("alt",`${element.title}`);
-        const titreElement = document.createElement("figcaption");
-        titreElement.innerText = element.title;
-        
-        
-        // Rattachement des balises
-        // On rattache la balise article à la section Fiches
-                galleryWorks.appendChild(workElement);
-                workElement.appendChild(imageElement);
-                workElement.appendChild(titreElement);
+        //Récupération des works depuis l'api
+        for (let i = 0; i < works.length; i++) {
+          const element = works[i];
+          console.log(element);
     
+          // Création de la fiche pour un work
+          const workElement = document.createElement("figure");
+          // Création des éléments composant la fiche
+          const imageElement = document.createElement("img");
+          imageElement.src = element.imageUrl;
+          imageElement.setAttribute("alt",`${element.title}`);
+          const titreElement = document.createElement("figcaption");
+          titreElement.innerText = element.title;
+            
+          // Rattachement des balises
+          // On rattache la balise article à la section Fiches
+          galleryWorks.appendChild(workElement);
+          workElement.appendChild(imageElement);
+          workElement.appendChild(titreElement);
         }
-        } catch (error) {
-      console.error('Une erreur est survenue lors de la récupération des travaux :', error);
-    
+      });
 
-  }
-} 
-fetchWorks()
+      allButton.click();
+
+      // Création des boutons de filtre pour chaque catégorie récupérée via l'objet set
+      categories.forEach((category) => {
+         const filterButton = document.createElement("p");
+         filterButton.textContent = category;
+         filterBar.appendChild(filterButton);
+
+        //Filtrer les works selon la catégorie cliquée
+         filterButton.addEventListener('click', () => {
+          const filteredWorks = works.filter((work) => category === work.category.name);
+        
+          const galleryWorks = document.querySelector(".gallery");
+          galleryWorks.innerHTML = "";
+
+  
+          // Affichage des works filtrés
+          for (let i = 0; i < filteredWorks.length; i++) {
+            const element = filteredWorks[i]
+
+            // Création de la fiche pour un work
+            const workElement = document.createElement("figure");
+            // Création des éléments composant la fiche
+            const imageElement = document.createElement("img");
+            imageElement.src = element.imageUrl;
+            imageElement.setAttribute("alt",`${element.title}`);
+            const titreElement = document.createElement("figcaption");
+            titreElement.innerText = element.title;
+        
+            // Rattachement des balises
+            // On rattache la balise article à la section Fiches
+            galleryWorks.appendChild(workElement);
+            workElement.appendChild(imageElement);
+            workElement.appendChild(titreElement);
+          }
+        });
+      });
+    } catch (error) {
+          console.error("Une erreur est survenue lors de la récupération des travaux :", error);
+      }
+}
+
+fetchWorks();
   
 

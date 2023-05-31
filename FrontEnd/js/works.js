@@ -3,7 +3,6 @@ async function fetchWorks() {
       const response = await fetch('http://localhost:5678/api/works');
       const works = await response.json();
 
-
       // Création de l'objet catégories
       const categories = new Set();
   

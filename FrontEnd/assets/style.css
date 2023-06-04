@@ -96,16 +96,20 @@ nav ul {
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
-	color: black!important;
+	color: black;
 }
 
 li:hover {
-	color: #B1663C!important;
+	color: #B1663C;
 }
 
-a:focus, a:active {
+a:visited {
 	text-decoration: none;
+	color: black;
   }
+a:hover:visited{
+	color: #B1663C;
+}
 
 #introduction {
 	display: flex;
@@ -151,7 +155,7 @@ a:focus, a:active {
 	padding: 7px 15px 7px;
 	font-family: 'Syne';
 	font-size: 1.2em;
-	background-color: #ffffff;
+	background-color: #FFFEF8;
 	color: #1D6154;
 }
 

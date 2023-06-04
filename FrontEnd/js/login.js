@@ -6,13 +6,14 @@ async function loginUser() {
     const response = await fetch("http://localhost:5678/api/users/login", {
         method: "POST",
         headers: {
-            Accept: "application/json",
-            "Content-type": "application/json"},
-        body: JSON.stringify ({
-            "email": "string",
-            "password": "string"
-          }),
-    });
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "email": formData.get("email"),
+          "password": formData.get("password")
+        })
+      });
 
     if (response.status === 200) { // statut 200, connexion réussie
         // obtenir le corps de réponse (méthode ci-dessus)
@@ -37,8 +38,8 @@ async function loginUser() {
         event.preventDefault(); // empeche le rechargement de la page par défaut
         console.log("demande envoyée");
 
-    const email = document.querySelector("#login-email").value;
-    const paswword = document.querySelector("#login-password").value;
+    const userEmail = document.querySelector("#login-email").value;
+    const UserPassword = document.querySelector("#login-password").value;
 
     loginUser();
     });

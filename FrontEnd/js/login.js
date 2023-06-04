@@ -2,17 +2,21 @@ async function loginUser() {
 
     //requete HTTP POST API
     const formConnect = document.querySelector("#login form");
-    const formData = new formData(formConnect);
-    const response = await fetch("http://localhost:5678/api/users/login",{
+    const formData = new FormData(formConnect);
+    const response = await fetch("http://localhost:5678/api/users/login", {
         method: "POST",
-        headers: {"Content-type": "application/json"},
-        body: JSON.stringify(formData),
-
+        headers: {
+            Accept: "application/json",
+            "Content-type": "application/json"},
+        body: JSON.stringify ({
+            "email": "string",
+            "password": "string"
+          }),
     });
 
     if (response.status === 200) { // statut 200, connexion réussie
         // obtenir le corps de réponse (méthode ci-dessus)
-        let json = await response.json();
+        const userId = await response.json();
         console.log("Connexion réussie !");
     } else if (response.status === 401) { // erreur 401, identifiants invalides
         alert("HTTP-Error: " + response.status);
@@ -30,7 +34,7 @@ async function loginUser() {
     //Ecoute du bouton submit
     const form = document.querySelector("#login form");
     form.addEventListener('submit', async (event) => {
-        event.preventDefault();
+        event.preventDefault(); // empeche le rechargement de la page par défaut
         console.log("demande envoyée");
 
     const email = document.querySelector("#login-email").value;

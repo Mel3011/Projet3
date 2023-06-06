@@ -17,18 +17,21 @@ async function loginUser() {
 
     if (response.status === 200) { // statut 200, connexion réussie
         // obtenir le corps de réponse (méthode ci-dessus)
-        const userId = await response.json();
+        const data = await response.json();
+        console.log("Connexion réussie !");
+        // Récupération du token
+        const token = data.token;
+        localStorage.setItem("jwt", token);
+        // Renvoi à la page d'accueil si connexion réussie
+        window.location.href = "/FrontEnd/"
+
         console.log("Connexion réussie !");
     } else if (response.status === 401) { // erreur 401, identifiants invalides
-        alert("HTTP-Error: " + response.status);
-        console.error("Login ou mot de passe incorrect");
+        alert("Login ou mot de passe incorrect");
     } else if (response.status === 404) { // erreur 404, utilisateur non trouvé
-        alert("HTTP-Error: " + response.status);
-        console.error("Utilisateur non trouvé");
+        alert("Utilisateur non trouvé");
     } else { // autres cas
-        alert("HTTP-Error: " + response.status);
-        console.error("Erreur lors de la connexion, veuillez réessayer ultérieurement");
-
+        alert("Erreur lors de la connexion, veuillez réessayer ultérieurement");
       }
 }
     

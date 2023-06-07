@@ -87,13 +87,47 @@ async function fetchWorks() {
           }
         });
       });
-    } catch (error) {
-          console.error("Une erreur est survenue lors de la récupération des travaux :", error);
+
+      //MODALE 
+      //création des constantes
+      const modal = document.querySelector("#worksModal");
+      const modalContent = document.querySelector(".modalContent");
+      const openModalButton = document.querySelector(".openModalButton");
+      const modalGallery = document.querySelector(".modalGallery");
+
+      //Ecoute du bouton submit
+      openModalButton.addEventListener('click', function() {
+        openModal();
+      })
+
+      //Afficher les travaux dans la modale
+      function showModalGallery () {
+        for (let i = 0; i < works.length; i++) {
+          const element = works[i];
+          const newElement = document.createElement("figure");
+          newElement.setAttribute("data-id", element.id);
+          const newElementImg = document.createElement("img");
+          newElementImg.src = element.imageUrl;
+          const newElementTitle = document.createElement("figcaption");
+          newElementTitle.innerText = "éditer";
+
+          //Rattachement des balises
+          modalGallery.appendChild(newElement);
+          newElement.appendChild(newElementImg);
+          newElement.appendChild(newElementTitle);
+        }
       }
+      //fonction ouvrir la modale
+      const openModal = function(){
+      modal.style.display = "flex";
+
+      showModalGallery()
+      }
+
+  } catch (error) {
+  console.error("Une erreur est survenue lors de la récupération des travaux :", error);
+  }
 }
 
 fetchWorks();
-
-
-  
 

@@ -19,11 +19,11 @@ async function loginUser() {
         // obtenir le corps de réponse (méthode ci-dessus)
         const data = await response.json();
         console.log("Connexion réussie !");
-        // Récupération du token
+        // Stockage du token
         const token = data.token;
         localStorage.setItem("jwt", token);
         // Renvoi à la page d'accueil si connexion réussie
-        window.location.href = "/FrontEnd/"
+        window.location.href = 'index.html';
 
         console.log("Connexion réussie !");
     } else if (response.status === 401) { // erreur 401, identifiants invalides
@@ -46,5 +46,7 @@ async function loginUser() {
 
     loginUser();
     });
+
+    
 
 

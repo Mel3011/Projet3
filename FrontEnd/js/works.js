@@ -94,10 +94,16 @@ async function fetchWorks() {
       const modalContent = document.querySelector(".modalContent");
       const openModalButton = document.querySelector(".openModalButton");
       const modalGallery = document.querySelector(".modalGallery");
+      const closeModalButton = document.querySelector(".closeModalButton");
 
-      //Ecoute du bouton submit
+      //Ecoute du bouton open
       openModalButton.addEventListener('click', function() {
         openModal();
+      })
+
+       //Ecoute du bouton close
+       closeModalButton.addEventListener('click', function() {
+        closeModal();
       })
 
       //Afficher les travaux dans la modale
@@ -111,10 +117,22 @@ async function fetchWorks() {
           const newElementTitle = document.createElement("figcaption");
           newElementTitle.innerText = "éditer";
 
+
+          // Conteneur supplémentaire pour l'image et l'icône de la corbeille
+          const imageContainer = document.createElement("div");
+          imageContainer.classList.add("image-container");
+
+          // Création de l'icône de corbeille
+          const trashIcon = document.createElement("i");
+          trashIcon.classList.add("fa-solid", "fa-trash-can");
+
           //Rattachement des balises
           modalGallery.appendChild(newElement);
-          newElement.appendChild(newElementImg);
+          newElement.appendChild(imageContainer)
+          imageContainer.appendChild(newElementImg);
+          imageContainer.appendChild(trashIcon);
           newElement.appendChild(newElementTitle);
+        
         }
       }
       //fonction ouvrir la modale
@@ -124,10 +142,26 @@ async function fetchWorks() {
       showModalGallery()
       }
 
+      // fonction fermer la modale
+      const closeModal = function(){
+        modal.style.display = "none";
+        modalGallery.innerHTML = "";
+      }
+
+      // Ajoutez un écouteur d'événement pour fermer la modale lorsque l'utilisateur clique en dehors de celle-ci
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+        closeModal();
+        }
+      });
+
   } catch (error) {
   console.error("Une erreur est survenue lors de la récupération des travaux :", error);
   }
 }
 
 fetchWorks();
+
+
+
 

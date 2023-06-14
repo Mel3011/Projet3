@@ -267,7 +267,7 @@ section#login {
 	width: 100%;
 	align-items: center;
     justify-content: center;
-	position: absolute;
+	position:absolute;
 	top: 0;
 	left: 0;
 	gap: 15px;
@@ -330,11 +330,6 @@ section#login {
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-.closeModalButton {
-
-	position: relative;
-
-}
 .modal input {
 		font-size: 1.2em;
 		border: none;
@@ -348,6 +343,9 @@ section#login {
 	font-size: 26px;
 }
 
+.modal-content {
+	position: relative;
+}
 .modalGallery {
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
@@ -355,15 +353,35 @@ section#login {
 }
 
 .modalGallery img {
-	width: 100px;
+	width: 100%;
 }
 .modalGalleryBar {
 	border: 1px solid #B3B3B3;
-	width: 90%; 
+	width: 100%; 
 }
 
 .modal p {
 	color:#D65353;
+}
+
+span.closeModalButton {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+.image-container {
+	position: relative;
+}
+.fa-trash-can {
+	color: white;
+	background-color: black;
+	font-size: 12px;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	padding: 5px;
+	border-radius: 5px;
 }
 
 /********* Footer *********/

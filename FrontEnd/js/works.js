@@ -105,9 +105,11 @@ async function fetchWorks() {
     });
 
     //Ecoute du bouton close
-    closeModalButton.addEventListener("click", function () {
-      closeModal();
-    });
+    if (closeModalButton) {
+      closeModalButton.addEventListener("click", function () {
+        closeModal();
+      });
+    }
 
     //Afficher les travaux dans la modale
     function showModalGallery() {
@@ -169,41 +171,102 @@ async function fetchWorks() {
       error
     );
   }
+
+  // fonction pour supprimer les travaux
+  async function deleteWork(workId, works) {
+    const userToken = localStorage.getItem("jwt"); // Récupération du token
+    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    if (response.ok) {
+      works.remove();
+      document.querySelector(`figure[data-id="${workId}"]`).remove();
+    }
+  }
+
+  // Modale ajouter des travaux
+
+  const workList = document.querySelector("#workList");
+  const addWork = document.querySelector("#addWork");
+  const returnToWorkList = document.querySelector("#returnToWorkList");
+  const selectPhoto = document.querySelector("#buttonAddPhoto");
+
+  //ecouteur d'evenement pour aller sur la page 2 de la modale
+  document
+    .getElementById("ajouterPhoto")
+    .addEventListener("click", function () {
+      workList.style.display = "none";
+      addWork.style.display = "flex";
+    });
+
+  //ecouteur d'évenement pour retourner sur la page 1 de la modale
+  returnToWorkList.addEventListener("click", function () {
+    workList.style.display = "flex";
+    addWork.style.display = "none";
+  });
+
+  //Ecouteur d'évenement sur le clic du bouton ajout photo
+  const photoInput = document.querySelector("#photoInput");
+  const uploadButton = document.querySelector("#uploadButton");
+
+  uploadButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    photoInput.click();
+  });
+
+  photoInput.addEventListener("change", () => {
+    const file = photoInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = function () {
+        const previewImage = document.createElement("img");
+        previewImage.src = reader.result;
+        previewImage.classList.add("preview-image");
+        previewImage.style.width = "130px";
+        previewImage.style.height = "170px";
+
+        // prévisualisation dans la modale
+        const previewContainer = document.querySelector(".preview-container");
+        const addPreviewBlock = document.querySelector(".addPhotoBlock");
+        addPreviewBlock.style.display = "none";
+        previewContainer.style.display = "flex";
+        previewContainer.innerHTML = "";
+        previewContainer.appendChild(previewImage);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function validateFields() {
+    const image = document.querySelector("#photoInput");
+    const titre = document.querySelector("#titreAjoutPhoto");
+    const categorie = document.querySelector("#categorieAjoutPhoto");
+    const acceptAddPhoto = document.querySelector("#acceptAddPhoto");
+
+    if (
+      image.value.length > 0 &&
+      titre.value.length > 0 &&
+      categorie.value.length > 0
+    ) {
+      acceptAddPhoto.style.backgroundColor = "#1D6154";
+    } else {
+      acceptAddPhoto.style.backgroundColor = "#A7A7A7";
+    }
+  }
+
+  // écouteur d'évènement pour confirmer tous les champs avant
+  Array.from(document.querySelector(".inputForm")).forEach(function (element) {
+    element.addEventListener("change", function () {
+      validateFields();
+    });
+  });
 }
 
 fetchWorks();
-
-// fonction pour supprimer les travaux
-async function deleteWork(workId, works) {
-  const userToken = localStorage.getItem("jwt"); // Récupération du token
-  const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${userToken}`,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  });
-  if (response.ok) {
-    works.remove();
-    document.querySelector(`figure[data-id="${workId}"]`).remove();
-  }
-}
-
-// Modale ajouter des travaux
-
-const workList = document.querySelector("#workList");
-const addWork = document.querySelector("#addWork");
-const returnToWorkList = document.querySelector("#returnToWorkList");
-
-//ecouteur d'evenement pour aller sur la page 2 de la modale
-document.getElementById("ajouterPhoto").addEventListener("click", function () {
-  workList.style.display = "none";
-  addWork.style.display = "flex";
-});
-
-//ecouteur d'évenement pour retourner sur la page 1 de la modale
-returnToWorkList.addEventListener("click", function () {
-  workList.style.display = "flex";
-  addWork.style.display = "none";
-});

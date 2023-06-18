@@ -78,13 +78,13 @@
 			<form action="index.html" method="post" class="inputForm" id="newPhotoForm">
 				<div class="addPhotoBlock">
 					<i class="fa-sharp fa-regular fa-image" id="iconeImg"></i>
-					<input type="file" name="image" id="buttonAddPhoto" accept="image/png, image/jpg" class="inputForm" style="opacity: 0;">
 					<fieldset>
-						<legend id="legendAddPhoto">+ Ajouter Photo</legend>
-						<img id="imgToShow">
-					</fieldset>
+						<input type="file" name="image" id="photoInput" accept="image/png, image/jpg" class="inputForm">
+						<button id="uploadButton">+ Ajouter Photo</button>
+					</fieldset>		
 					<p id="tailleFichier">jpg, png : 4mo max</p>
 				</div>
+				<div class="preview-container"></div>
 				<div class="infoAddPhoto">
 					<label for="titleAddPhoto">Titre</label>
 					<input type="text" name="title" id="titreAjoutPhoto" class="inputForm"></input>
@@ -96,7 +96,7 @@
 						<option value=3>Hôtels & restaurants</option>
 					</select>
 					<div class="modalGalleryBar"></div>
-					<input type="submit" value="Valider" id="validAddPhoto">
+					<input type="submit" value="Valider" id="acceptAddPhoto">
 				</div>
 			</form>
 		</div>

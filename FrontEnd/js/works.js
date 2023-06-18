@@ -96,6 +96,8 @@ async function fetchWorks() {
     const openModalButton = document.querySelector(".openModalButton");
     const modalGallery = document.querySelector(".modalGallery");
     const closeModalButton = document.querySelector(".closeModalButton");
+    const workList = document.querySelector("#workList");
+    const addWork = document.querySelector("#addWork");
 
     //Ecoute du bouton open
     openModalButton.addEventListener("click", function () {
@@ -127,7 +129,8 @@ async function fetchWorks() {
         trashIcon.classList.add("fa-solid", "fa-trash-can");
 
         // écouteur d'évènement sur les icones poubelles pour supprimer une image
-        trashIcon.addEventListener("click", function () {
+        trashIcon.addEventListener("click", function (e) {
+          e.preventDefault(); // Empêche la fermeture de la modale
           const workId = newElement.getAttribute("data-id");
           deleteWork(workId, newElement);
         });
@@ -143,6 +146,7 @@ async function fetchWorks() {
     //fonction ouvrir la modale
     const openModal = function () {
       modal.style.display = "flex";
+      addWork.style.display = "none";
 
       showModalGallery();
     };
@@ -171,11 +175,11 @@ fetchWorks();
 
 // fonction pour supprimer les travaux
 async function deleteWork(workId, works) {
-  //const userToken = localStorage.getItem("jwt"); // Récupération du token
+  const userToken = localStorage.getItem("jwt"); // Récupération du token
   const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
     method: "DELETE",
     headers: {
-      Authorization: "Bearer " + localStorage.getItem("jwt"),
+      Authorization: `Bearer ${userToken}`,
       "Content-Type": "application/json",
       Accept: "application/json",
     },
@@ -185,3 +189,21 @@ async function deleteWork(workId, works) {
     document.querySelector(`figure[data-id="${workId}"]`).remove();
   }
 }
+
+// Modale ajouter des travaux
+
+const workList = document.querySelector("#workList");
+const addWork = document.querySelector("#addWork");
+const returnToWorkList = document.querySelector("#returnToWorkList");
+
+//ecouteur d'evenement pour aller sur la page 2 de la modale
+document.getElementById("ajouterPhoto").addEventListener("click", function () {
+  workList.style.display = "none";
+  addWork.style.display = "flex";
+});
+
+//ecouteur d'évenement pour retourner sur la page 1 de la modale
+returnToWorkList.addEventListener("click", function () {
+  workList.style.display = "flex";
+  addWork.style.display = "none";
+});

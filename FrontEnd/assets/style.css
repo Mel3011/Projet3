@@ -341,6 +341,7 @@ section#login {
 
 .modal h3 {
 	font-size: 26px;
+	margin-bottom: 1.2em;
 }
 
 .modal-content {
@@ -358,6 +359,7 @@ section#login {
 .modalGalleryBar {
 	border: 1px solid #B3B3B3;
 	width: 100%; 
+	margin: 25px 0;
 }
 
 .modal p {
@@ -383,7 +385,90 @@ span.closeModalButton {
 	padding: 5px;
 	border-radius: 5px;
 }
+/*Modale ajout photo*/
 
+#addork {
+	display: none;
+}
+.infoAddPhoto {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding: 20px 0;
+}
+
+.inputForm{
+	width: 100%;
+}
+
+.addPhotoBlock {
+	background-color: #E8F1F7;
+	border-radius: 5px;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.fa-arrow-left-long {
+	position: absolute;
+	left: 30px;
+	top: 30px;
+	font-size: 25px;
+}
+
+#validAddPhoto {
+	background-color: #A7A7A7;
+	width: 40%;
+	align-self: center;
+}
+
+#legendAddPhoto {
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 1.2em;
+	color: #306685;
+	background-color: #CBD6DC;
+	margin : 1em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+	padding: 10px;
+}
+
+#iconeImg {
+	font-size: 50px;
+	color: #B9C5CC;
+	margin-bottom: 15px;
+	
+}
+
+#buttonAddPhoto {
+	display: none;
+}
+
+#categorieAjoutPhoto {
+	font-size: 1.2em;
+    border: none;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+    width: 100%;
+    padding: 10px;
+	margin: 10px 0;
+}
+#titreAjoutPhoto {
+	margin: 10px 0;
+	width: 100%;
+	padding: 10px 0;
+	
+}
+
+label {
+	font-weight: bold;
+}
+
+#tailleFichier {
+	color: black;
+}
 /********* Footer *********/
 footer nav ul {
 	display: flex;

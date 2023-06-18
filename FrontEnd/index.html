@@ -63,13 +63,42 @@
 		</div>
 	</section>
 	<section id="worksModal" class="modal">
-	    <div class="modal-content">
+	    <div class="modal-content" id="workList">
 			<span class="closeModalButton"><i class='fa-solid fa-xmark fa-lg'></i></span>
-			<h3>Galerie photo</h3>
+			<h3 class="modalTitle">Galerie photo</h3>
 			<div class="modalGallery"></div>
 			<div class="modalGalleryBar"></div>
 			<input type="submit" value="Ajouter une photo" id="ajouterPhoto">
 			<p>Supprimer la galerie</p>
+		</div>
+		<div class="modal-content" id="addWork">
+			<span id="returnToWorkList"><i class="fa-solid fa-arrow-left-long"></i></span>
+			<span class="closeModalButton"><i class='fa-solid fa-xmark fa-lg'></i></span>
+			<h3 class="modalTitle">Ajout photo</h3>
+			<form action="index.html" method="post" class="inputForm" id="newPhotoForm">
+				<div class="addPhotoBlock">
+					<i class="fa-sharp fa-regular fa-image" id="iconeImg"></i>
+					<input type="file" name="image" id="buttonAddPhoto" accept="image/png, image/jpg" class="inputForm" style="opacity: 0;">
+					<fieldset>
+						<legend id="legendAddPhoto">+ Ajouter Photo</legend>
+						<img id="imgToShow">
+					</fieldset>
+					<p id="tailleFichier">jpg, png : 4mo max</p>
+				</div>
+				<div class="infoAddPhoto">
+					<label for="titleAddPhoto">Titre</label>
+					<input type="text" name="title" id="titreAjoutPhoto" class="inputForm"></input>
+					<label for="categoryAddPhoto">Catégorie</label>
+					<select name="category" id="categorieAjoutPhoto" cols="60" rows="1">
+						<option value=""></option>
+						<option value=1>Objets</option>
+						<option value=2>Appartements</option>
+						<option value=3>Hôtels & restaurants</option>
+					</select>
+					<div class="modalGalleryBar"></div>
+					<input type="submit" value="Valider" id="validAddPhoto">
+				</div>
+			</form>
 		</div>
 	</section>
 	<section id="contact">

@@ -261,12 +261,60 @@ async function fetchWorks() {
     }
   }
 
-  // écouteur d'évènement pour confirmer tous les champs avant
+  // écouteur d'évènement pour confirmer tous les champs avant la validation
   Array.from(document.querySelector(".inputForm")).forEach(function (element) {
     element.addEventListener("change", function () {
       validateFields();
     });
   });
+
+  // Fonction ajouter une nouvelle photo
+  async function postNewPhoto() {
+    const formData = new FormaData(document.querySelector("#photoInput"));
+    const photoPosted = await fetch(`http://localhost:5678/api/work`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      },
+      body: formData,
+    });
+    const response = await photoPosted.json();
+
+    if (response) {
+      // création des constantes dans la modale
+      const newPostModal = document.createElement("figure");
+      newPostModal.setAttribute("data-id", response.id);
+      const newPostModalImg = document.createElement("img");
+      newPostModalImg.src = response.imageUrl;
+      const newPostModalTitle = document.createElement("figcaption");
+      newPostModalTitle.innerText = "éditer";
+
+      modalGallery.appendChild(newPostModal);
+      newPostModal.appendChild(newPostModalImg);
+      newPostModal.appendChild(newPostModalTitle);
+
+      //création des constantes dans la gallerie
+      const newPost = document.createElement("figure");
+      newPost.setAttribute("data-id", response.id);
+      const newPostImg = document.createElement("img");
+      newPostImg.src = response.imageUrl;
+      const newPostTitle = document.createElement("figcaption");
+      newPostTitle.innerHTML = response.title;
+      newWork.setAttribute("categoryId", response.categoryId);
+
+      galleryWorks.appendChild(newPost);
+      newPost.appendChild(newPostImg);
+      newPost.appendChild(newPostTitle);
+    }
+  }
+
+  // ecouteur d'évènement envoi du formulaire
+  document
+    .querySelector("#photoInput")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+    });
 }
 
 fetchWorks();

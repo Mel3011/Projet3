@@ -250,6 +250,7 @@ async function fetchWorks() {
     const categorie = document.querySelector("#categorieAjoutPhoto");
     const acceptAddPhoto = document.querySelector("#acceptAddPhoto");
 
+    console.log("ici");
     if (
       image.value.length > 0 &&
       titre.value.length > 0 &&
@@ -269,52 +270,50 @@ async function fetchWorks() {
   });
 
   // Fonction ajouter une nouvelle photo
-  async function postNewPhoto() {
-    const formData = new FormaData(document.querySelector("#photoInput"));
-    const photoPosted = await fetch(`http://localhost:5678/api/work`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        "Content-Type": "application/json",
-      },
-      body: formData,
-    });
-    const response = await photoPosted.json();
+  async function postNewPhoto(titre, categorie, image) {
+    try {
+      const formData = new FormData();
+      formData.append("titre", titre);
+      formData.append("categorie", categorie);
+      formData.append("image", image);
 
-    if (response) {
-      // création des constantes dans la modale
-      const newPostModal = document.createElement("figure");
-      newPostModal.setAttribute("data-id", response.id);
-      const newPostModalImg = document.createElement("img");
-      newPostModalImg.src = response.imageUrl;
-      const newPostModalTitle = document.createElement("figcaption");
-      newPostModalTitle.innerText = "éditer";
+      const userToken = localStorage.getItem("jwt");
+      const headers = new Headers();
+      headers.append("Authorization", "Bearer " + userToken);
 
-      modalGallery.appendChild(newPostModal);
-      newPostModal.appendChild(newPostModalImg);
-      newPostModal.appendChild(newPostModalTitle);
+      const photoPosted = await fetch("http://localhost:5678/api/works/", {
+        method: "POST",
+        headers: headers,
+        body: formData,
+      });
 
-      //création des constantes dans la gallerie
-      const newPost = document.createElement("figure");
-      newPost.setAttribute("data-id", response.id);
-      const newPostImg = document.createElement("img");
-      newPostImg.src = response.imageUrl;
-      const newPostTitle = document.createElement("figcaption");
-      newPostTitle.innerHTML = response.title;
-      newWork.setAttribute("categoryId", response.categoryId);
+      if (!photoPosted.ok) {
+        throw new Error("Ta requête POST n'est pas passée :/");
+      }
 
-      galleryWorks.appendChild(newPost);
-      newPost.appendChild(newPostImg);
-      newPost.appendChild(newPostTitle);
+      const responseData = await photoPosted.json();
+      console.log("La requête POST est passée", responseData);
+      addWorkForm();
+      // réinitialiser le champ inputFile sinon il envoie plusieurs formData en post
+      inputFile.value = "";
+    } catch (error) {
+      console.error("Error:", error);
+      console.log("La requête POST n'est PAS passée");
     }
   }
 
-  // ecouteur d'évènement envoi du formulaire
-  document
-    .querySelector("#photoInput")
-    .addEventListener("submit", function (event) {
-      event.preventDefault();
-    });
+  // Écouteur d'événement pour l'envoi du formulaire
+  const addWorkForm = document.querySelector("#acceptAddPhoto");
+  addWorkForm.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    const image = document.querySelector("#photoInput").files[0].name;
+    const titre = document.querySelector("#titreAjoutPhoto").value;
+    const categorie = document.querySelector("#categorieAjoutPhoto").value;
+
+    console.log(image);
+    postNewPhoto(titre, categorie, image);
+  });
 }
 
 fetchWorks();

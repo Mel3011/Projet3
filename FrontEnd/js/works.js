@@ -132,9 +132,9 @@ async function fetchWorks() {
 
         // écouteur d'évènement sur les icones poubelles pour supprimer une image
         trashIcon.addEventListener("click", function (e) {
-          e.preventDefault(); // Empêche la fermeture de la modale
           const workId = newElement.getAttribute("data-id");
           deleteWork(workId, newElement);
+          e.preventDefault(); // Empêche la fermeture de la modale
         });
 
         //Rattachement des balises
@@ -184,7 +184,7 @@ async function fetchWorks() {
       },
     });
     if (response.ok) {
-      works.remove();
+      workElement.remove();
       document.querySelector(`figure[data-id="${workId}"]`).remove();
     }
   }
@@ -278,12 +278,12 @@ async function fetchWorks() {
       formData.append("image", image);
 
       const userToken = localStorage.getItem("jwt");
-      const headers = new Headers();
-      headers.append("Authorization", "Bearer " + userToken);
 
       const photoPosted = await fetch("http://localhost:5678/api/works/", {
         method: "POST",
-        headers: headers,
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
         body: formData,
       });
 

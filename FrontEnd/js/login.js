@@ -1,7 +1,8 @@
 async function loginUser() {
   //requete HTTP POST API
-  const formConnect = document.querySelector("#login form");
+  const formConnect = document.querySelector("#form");
   const formData = new FormData(formConnect);
+  console.log(formData);
   const response = await fetch("http://localhost:5678/api/users/login", {
     method: "POST",
     headers: {
@@ -39,21 +40,10 @@ async function loginUser() {
 }
 
 //Ecoute du bouton submit
-const form = document.querySelector("#login form");
+const form = document.querySelector("#form");
 form.addEventListener("submit", async (event) => {
   event.preventDefault(); // empeche le rechargement de la page par défaut
   console.log("demande envoyée");
 
-  const userEmail = document.querySelector("#login-email").value;
-  const UserPassword = document.querySelector("#login-password").value;
-
   loginUser();
 });
-
-// // déconnexion mode admin
-// function removeToken() {
-//   const token = localStorage.getItem("jwt");
-//   // Supprime le token du localStorage
-//   localStorage.removeItem("token");
-//   sessionStorage.removeItem("deletedImages");
-// }

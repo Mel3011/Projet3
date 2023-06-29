@@ -1,7 +1,6 @@
 // accès au mode édition si connexion réussie
 // récupération du token dans le local Storage
 const userToken = localStorage.getItem("jwt");
-console.log(userToken);
 function login() {
   if (userToken) {
     // user reconnu et connecté
@@ -26,6 +25,15 @@ function login() {
     loginButton.innerHTML = "logout";
   } else {
     // utilisateur non connecté
+  }
+  // déconnexion mode admin
+  const loginButton = document.querySelector("#loginButton");
+  loginButton.addEventListener("click", handleLogout);
+
+  function handleLogout() {
+    console.log("ici");
+    localStorage.removeItem("jwt");
+    window.location.href = "index.html";
   }
 }
 login();

@@ -1,216 +1,264 @@
-async function fetchWorks() {
+// Récupère les données des travaux 
+async function fetchWorksData() {
   try {
     const response = await fetch("http://localhost:5678/api/works");
-    const works = await response.json();
-
-    // Création de l'objet catégories
-    const categories = new Set();
-
-    for (let i = 0; i < works.length; i++) {
-      const work = works[i];
-      const category = work.category.name;
-      console.log(category);
-
-      // Ajout de la catégorie obtenue à l'objet Set pour obtenir les catégories uniques
-      categories.add(category);
-    }
-
-    // Création de la barre de filtres
-    const filterBar = document.querySelector(".filter");
-
-    // Création du bouton Tous
-    const allButton = document.createElement("p");
-    allButton.textContent = "Tous";
-    filterBar.appendChild(allButton);
-
-    //Affichage de tous les works au clic sur bouton tous
-    allButton.addEventListener("click", () => {
-      const galleryWorks = document.querySelector(".gallery");
-      galleryWorks.innerHTML = "";
-
-      //Récupération des works depuis l'api
-      for (let i = 0; i < works.length; i++) {
-        const element = works[i];
-        console.log(element);
-
-        // Création de la fiche pour un work
-        const workElement = document.createElement("figure");
-        // Création des éléments composant la fiche
-        const imageElement = document.createElement("img");
-        imageElement.src = element.imageUrl;
-        imageElement.setAttribute("alt", `${element.title}`);
-        const titreElement = document.createElement("figcaption");
-        titreElement.innerText = element.title;
-
-        // Rattachement des balises
-        // On rattache la balise article à la section Fiches
-        galleryWorks.appendChild(workElement);
-        workElement.appendChild(imageElement);
-        workElement.appendChild(titreElement);
-      }
-    });
-
-    allButton.click();
-
-    // Création des boutons de filtre pour chaque catégorie récupérée via l'objet set
-    categories.forEach((category) => {
-      const filterButton = document.createElement("p");
-      filterButton.textContent = category;
-      filterBar.appendChild(filterButton);
-
-      //Filtrer les works selon la catégorie cliquée
-      filterButton.addEventListener("click", () => {
-        const filteredWorks = works.filter(
-          (work) => category === work.category.name
-        );
-
-        const galleryWorks = document.querySelector(".gallery");
-        galleryWorks.innerHTML = "";
-
-        // Affichage des works filtrés
-        for (let i = 0; i < filteredWorks.length; i++) {
-          const element = filteredWorks[i];
-
-          // Création de la fiche pour un work
-          const workElement = document.createElement("figure");
-          // Création des éléments composant la fiche
-          const imageElement = document.createElement("img");
-          imageElement.src = element.imageUrl;
-          imageElement.setAttribute("alt", `${element.title}`);
-          const titreElement = document.createElement("figcaption");
-          titreElement.innerText = element.title;
-
-          // Rattachement des balises
-          // On rattache la balise article à la section Fiches
-          galleryWorks.appendChild(workElement);
-          workElement.appendChild(imageElement);
-          workElement.appendChild(titreElement);
-        }
-      });
-    });
-
-    //MODALE
-    //création des constantes
-    const modal = document.querySelector("#worksModal");
-    const modalContent = document.querySelector(".modalContent");
-    const openModalButton = document.querySelector(".openModalButton");
-    const modalGallery = document.querySelector(".modalGallery");
-    const closeModalButton = document.querySelector(".closeModalButton");
-    const workList = document.querySelector("#workList");
-    const addWork = document.querySelector("#addWork");
-
-    //Ecoute du bouton open
-    openModalButton.addEventListener("click", function () {
-      openModal();
-    });
-
-    //Ecoute du bouton close
-    if (closeModalButton) {
-      closeModalButton.addEventListener("click", function () {
-        closeModal();
-      });
-    }
-
-    //Afficher les travaux dans la modale
-    function showModalGallery() {
-      for (let i = 0; i < works.length; i++) {
-        const element = works[i];
-        const newElement = document.createElement("figure");
-        newElement.setAttribute("data-id", element.id);
-        const newElementImg = document.createElement("img");
-        newElementImg.src = element.imageUrl;
-        const newElementTitle = document.createElement("figcaption");
-        newElementTitle.innerText = "éditer";
-
-        // Conteneur supplémentaire pour l'image et l'icône de la corbeille
-        const imageContainer = document.createElement("div");
-        imageContainer.classList.add("image-container");
-
-        // Création de l'icône de corbeille
-        const trashIcon = document.createElement("i");
-        trashIcon.classList.add("fa-solid", "fa-trash-can");
-
-        // écouteur d'évènement sur les icones poubelles pour supprimer une image
-        trashIcon.addEventListener("click", function (e) {
-          const workId = newElement.getAttribute("data-id");
-          deleteWork(workId, newElement);
-          e.preventDefault(); // Empêche la fermeture de la modale
-        });
-
-        //Rattachement des balises
-        modalGallery.appendChild(newElement);
-        newElement.appendChild(imageContainer);
-        imageContainer.appendChild(newElementImg);
-        imageContainer.appendChild(trashIcon);
-        newElement.appendChild(newElementTitle);
-      }
-    }
-    //fonction ouvrir la modale
-    const openModal = function () {
-      modal.style.display = "flex";
-      addWork.style.display = "none";
-
-      showModalGallery();
-    };
-
-    // fonction fermer la modale
-    const closeModal = function () {
-      modal.style.display = "none";
-      modalGallery.innerHTML = "";
-    };
-
-    // Ecouteur d'événement pour fermer la modale lorsque l'utilisateur clique en dehors
-    window.addEventListener("click", function (event) {
-      if (event.target === modal) {
-        closeModal();
-      }
-    });
+    return await response.json();
   } catch (error) {
     console.error(
       "Une erreur est survenue lors de la récupération des travaux :",
       error
     );
   }
+}
 
-  // fonction pour supprimer les travaux
-  async function deleteWork(workId, works) {
-    const userToken = localStorage.getItem("jwt"); // Récupération du token
-    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-    if (response.ok) {
-      workElement.remove();
-      document.querySelector(`figure[data-id="${workId}"]`).remove();
-    }
+// Récupère les données des travaux et effectue les actions nécessaires pour afficher les travaux
+async function fetchWorks() {
+  const works = await fetchWorksData();
+  const categories = createCategoriesSet(works); // recupere les catégories depuis la fonction createCategoriesSet
+  const filterBar = createFilterBar();
+  const allButton = createAllButton(filterBar, works);
+  createFilterButtons(filterBar, categories, works);
+  return works;
+}
+
+// Actualise la galerie des travaux en récupérant les données et en initialisant la fenêtre modale
+async function refreshWorksGallery() {
+  const works = await fetchWorks();
+  const modalGallery = document.querySelector(".modalGallery");
+  modalGallery.innerHTML = "";
+  initializeModal(works);
+}
+
+// Crée un ensemble de catégories à partir des données des travaux
+function createCategoriesSet(works) {
+  const categories = new Set();
+
+  for (let i = 0; i < works.length; i++) {
+    const work = works[i];
+    const category = work.category.name;
+    categories.add(category);
   }
 
-  // Modale ajouter des travaux
+  return categories;
+}
 
+// Crée la barre de filtrage des travaux
+function createFilterBar() {
+  const filterBar = document.querySelector(".filter");
+  return filterBar;
+}
+
+// Crée le bouton "Tous" dans la barre de filtrage des travaux
+function createAllButton(filterBar, works) {
+  const allButton = document.createElement("p");
+  allButton.textContent = "Tous";
+  filterBar.appendChild(allButton);
+
+  // Affiche tous les travaux lorsque le bouton "Tous" est cliqué
+  allButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    const galleryWorks = document.querySelector(".gallery");
+    galleryWorks.innerHTML = "";
+    displayWorks(works);
+  });
+
+  allButton.click();
+
+  return allButton;
+}
+
+// Filtre les travaux par catégorie
+function filterWorksByCategory(category, works) {
+  return works.filter((work) => category === work.category.name);
+}
+
+// Crée les boutons de filtrage des travaux pour chaque catégorie
+function createFilterButtons(filterBar, categories, works) {
+  categories.forEach((category) => {
+    const filterButton = document.createElement("p");
+    filterButton.textContent = category;
+    filterBar.appendChild(filterButton);
+
+    // Affiche les travaux correspondants lorsque le bouton de filtrage est cliqué
+    filterButton.addEventListener("click", (event) => {
+      event.preventDefault(); // permet de ne pas recharger la page au clic
+      const filteredWorks = filterWorksByCategory(category, works);
+      const galleryWorks = document.querySelector(".gallery");
+      galleryWorks.innerHTML = ""; // pour reinitialiser l'affichage
+      displayWorks(filteredWorks);
+    });
+  });
+}
+
+// Affiche les travaux dans la galerie
+function displayWorks(works) {
+  const galleryWorks = document.querySelector(".gallery");
+
+  for (let i = 0; i < works.length; i++) {
+    const element = works[i];
+
+    const workElement = document.createElement("figure");
+    const imageElement = document.createElement("img");
+    imageElement.src = element.imageUrl;
+    imageElement.setAttribute("alt", `${element.title}`);
+    const titreElement = document.createElement("figcaption");
+    titreElement.innerText = element.title;
+
+    galleryWorks.appendChild(workElement);
+    workElement.appendChild(imageElement);
+    workElement.appendChild(titreElement);
+  }
+}
+
+// Permet de raffraichir la gallerie après une action (maj fetch)
+async function updateWorksGallery() {
+  const works = await fetchWorks();
+  const modalGallery = document.querySelector(".modalGallery");
+  modalGallery.innerHTML = "";
+  showModalGallery(works);
+}
+
+// Initialise la fenêtre modale avec les travaux
+async function initializeModal(works ) {
+
+  const modal = document.querySelector("#worksModal");
+  const openModalButton = document.querySelector(".openModalButton");
+  const modalGallery = document.querySelector(".modalGallery");
+  const closeModalButton = document.querySelector(".closeModalButton");
+
+  // Affiche la fenêtre modale et la galerie des travaux lors du clic sur le bouton d'ouverture
+  openModalButton.addEventListener("click", async function (e) {
+    e.preventDefault();
+    modal.style.display = "flex";
+    addWork.style.display = "none";
+    showModalGallery(works); // lancer la fonction qui permet de visualiser les works dans la galeri
+    workModal(); // modal pour ajouter les images
+  });
+
+  // Ferme la fenêtre modale lors du clic sur le bouton de fermeture
+  if (closeModalButton) {
+    closeModalButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      modal.style.display = "none";
+      modalGallery.innerHTML = "";
+    });
+  }
+
+  // Ferme la fenêtre modale lors du clic en dehors du contenu du modal
+  window.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.style.display = "none";
+      modalGallery.innerHTML = "";
+    }
+  });
+}
+
+
+// Affiche la galerie des travaux dans la fenêtre modale
+async function showModalGallery(works) {
+  const modalGallery = document.querySelector(".modalGallery");
+
+  modalGallery.innerHTML = "";
+
+  // Vérifie si l'événement de clic est déjà attaché à la galerie des travaux
+  const isModalGalleryClickHandlerAttached =
+    modalGallery.getAttribute("data-click-handler");
+
+  if (!isModalGalleryClickHandlerAttached) {
+    // Gère les clics sur la galerie des travaux, y compris la suppression d'un travail
+    const modalGalleryClickHandler = async function (event) {
+      event.preventDefault();
+      const trashIcon = event.target.closest(".deleteTrashIcon");
+      if (trashIcon) {
+        const workId = trashIcon.getAttribute("data-work-id");
+        if (confirm("Voulez-vous supprimer l'image?")) {
+          const userToken = localStorage.getItem("jwt");
+          const response = await fetch(
+            "http://localhost:5678/api/works/" + workId,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                authorization: `Bearer ${userToken}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            removeWorkFromDOM(workId); // Supprime l'image du DOM de la page d'accueil
+            updateWorksGallery(); // Met à jour la galerie des travaux dans la fenêtre modale
+          } else {
+            console.log(
+              "Une erreur s'est produite lors de la suppression du projet."
+            );
+          }
+        }
+      }
+    };
+
+    modalGallery.addEventListener("click", modalGalleryClickHandler);
+
+    // Ajoute l'attribut pour indiquer que l'événement de clic est attaché
+    modalGallery.setAttribute("data-click-handler", "true");
+  }
+
+  for (let i = 0; i < works.length; i++) {
+    const element = works[i];
+    const newElement = document.createElement("figure");
+    newElement.setAttribute("data-id", element.id);
+    const newElementImg = document.createElement("img");
+    newElementImg.src = element.imageUrl;
+    const newElementTitle = document.createElement("figcaption");
+    newElementTitle.innerText = "éditer";
+
+    const imageContainer = document.createElement("div");
+    imageContainer.classList.add("image-container");
+
+    const trashIcon = document.createElement("i");
+    trashIcon.classList.add(
+      "deleteTrashIcon",
+      "fa",
+      "fa-solid",
+      "fa-trash-can"
+    );
+    trashIcon.setAttribute("data-work-id", element.id);
+
+    modalGallery.appendChild(newElement);
+    newElement.appendChild(imageContainer);
+    imageContainer.appendChild(newElementImg);
+    imageContainer.appendChild(trashIcon);
+    newElement.appendChild(newElementTitle);
+  }
+}
+
+// Supprime un travail du DOM
+function removeWorkFromDOM(workId) {
+  const workElement = document.querySelector(`figure[data-id="${workId}"]`);
+  if (workElement) {
+    workElement.remove(); // Permet de suprrimer depuis le DOM sans recharger la page
+  }
+}
+
+// Fonction pour gérer la fenêtre modale
+function workModal(e) {
   const workList = document.querySelector("#workList");
   const addWork = document.querySelector("#addWork");
   const returnToWorkList = document.querySelector("#returnToWorkList");
-  const selectPhoto = document.querySelector("#buttonAddPhoto");
+  const close = document.querySelector(".closeModalButton");
 
-  //ecouteur d'evenement pour aller sur la page 2 de la modale
   document
     .getElementById("ajouterPhoto")
-    .addEventListener("click", function () {
+    .addEventListener("click", function (e) {
       workList.style.display = "none";
       addWork.style.display = "flex";
     });
 
-  //ecouteur d'évenement pour retourner sur la page 1 de la modale
-  returnToWorkList.addEventListener("click", function () {
+  returnToWorkList.addEventListener("click", function (e) {
     workList.style.display = "flex";
     addWork.style.display = "none";
+    updateWorksGallery();
   });
 
-  //Ecouteur d'évenement sur le clic du bouton ajout photo
   const photoInput = document.querySelector("#photoInput");
   const uploadButton = document.querySelector("#uploadButton");
 
@@ -219,101 +267,107 @@ async function fetchWorks() {
     photoInput.click();
   });
 
-  photoInput.addEventListener("change", () => {
-    const file = photoInput.files[0];
-    if (file) {
-      const reader = new FileReader();
+  photoInput.addEventListener("change", handlePhotoInputChange);
 
-      reader.onload = function () {
-        const previewImage = document.createElement("img");
-        previewImage.src = reader.result;
-        previewImage.classList.add("preview-image");
-        previewImage.style.width = "130px";
-        previewImage.style.height = "170px";
-
-        // prévisualisation dans la modale
-        const previewContainer = document.querySelector(".preview-container");
-        const addPreviewBlock = document.querySelector(".addPhotoBlock");
-        addPreviewBlock.style.display = "none";
-        previewContainer.style.display = "flex";
-        previewContainer.innerHTML = "";
-        previewContainer.appendChild(previewImage);
-      };
-
-      reader.readAsDataURL(file);
-    }
+  const inputFields = document.querySelectorAll(".inputForm");
+  inputFields.forEach((element) => {
+    element.addEventListener("change", validateFields);
   });
 
-  function validateFields() {
-    const image = document.querySelector("#photoInput");
-    const titre = document.querySelector("#titreAjoutPhoto");
-    const categorie = document.querySelector("#categorieAjoutPhoto");
-    const acceptAddPhoto = document.querySelector("#acceptAddPhoto");
+  // Bouton de validation du formulaire d'ajout de travaux
+  const addWorkForm = document.querySelector("#newPhotoForm");
+  addWorkForm.addEventListener("submit", async (event) => {
+    event.preventDefault(); // Empêcher le comportement par défaut du formulaire
 
-    console.log("ici");
-    if (
-      image.value.length > 0 &&
-      titre.value.length > 0 &&
-      categorie.value.length > 0
-    ) {
-      acceptAddPhoto.style.backgroundColor = "#1D6154";
-    } else {
-      acceptAddPhoto.style.backgroundColor = "#A7A7A7";
-    }
-  }
+    const form = event.target;
+    const formData = new FormData(form);
 
-  // écouteur d'évènement pour confirmer tous les champs avant la validation
-  Array.from(document.querySelector(".inputForm")).forEach(function (element) {
-    element.addEventListener("change", function () {
-      validateFields();
-    });
-  });
+    const userToken = localStorage.getItem("jwt");
+    const headers = new Headers();
+    headers.append("Authorization", "Bearer " + userToken);
 
-  // Fonction ajouter une nouvelle photo
-  async function postNewPhoto(titre, categorie, image) {
     try {
-      const formData = new FormData();
-      formData.append("titre", titre);
-      formData.append("categorie", categorie);
-      formData.append("image", image);
-
-      const userToken = localStorage.getItem("jwt");
-
-      const photoPosted = await fetch("http://localhost:5678/api/works/", {
+      const response = await fetch("http://localhost:5678/api/works/", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
+        headers: headers,
         body: formData,
       });
 
-      if (!photoPosted.ok) {
-        throw new Error("Ta requête POST n'est pas passée :/");
+      if (response.ok) {
+        alert("L'ajout de l'image a été réalisé avec succès");
+        form.reset(); // Réinitialiser le formulaire
+        clearPreviewImage()
+        const responseData = await response.json();
+        // Traiter la réponse JSON si nécessaire
+        refreshWorksGallery(); // Mettre à jour la galerie des travaux sans rechargement
+      } else  {
+        alert("Veuillez ajouter un titre ou une image");
+        console.log("Action impossible");
       }
-
-      const responseData = await photoPosted.json();
-      console.log("La requête POST est passée", responseData);
-      addWorkForm();
-      // réinitialiser le champ inputFile sinon il envoie plusieurs formData en post
-      inputFile.value = "";
     } catch (error) {
-      console.error("Error:", error);
-      console.log("La requête POST n'est PAS passée");
+      console.error(
+        "Une erreur s'est produite lors de la publication du travail :",
+        error
+      );
     }
-  }
-
-  // Écouteur d'événement pour l'envoi du formulaire
-  const addWorkForm = document.querySelector("#acceptAddPhoto");
-  addWorkForm.addEventListener("click", function (event) {
-    event.preventDefault();
-
-    const image = document.querySelector("#photoInput").files[0].name;
-    const titre = document.querySelector("#titreAjoutPhoto").value;
-    const categorie = document.querySelector("#categorieAjoutPhoto").value;
-
-    console.log(image);
-    postNewPhoto(titre, categorie, image);
   });
 }
 
-fetchWorks();
+// Gère le changement de l'entrée de photo
+function handlePhotoInputChange() {
+  const file = this.files[0];
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function () {
+
+      const previewImage = document.createElement("img");
+      previewImage.src = reader.result;
+      previewImage.classList.add("preview-image");
+      previewImage.style.width = "130px";
+      previewImage.style.height = "170px";
+
+      const previewContainer = document.querySelector(".preview-container");
+      const addPreviewBlock = document.querySelector(".addPhotoBlock");
+      addPreviewBlock.style.display = "none";
+      previewContainer.style.display = "flex";
+      previewContainer.appendChild(previewImage);
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
+//Fonction pour raffraichir l'image de preview
+function clearPreviewImage() {
+  const previewContainer = document.querySelector(".preview-container");
+  const addPreviewBlock = document.querySelector(".addPhotoBlock");
+  const previewImage = document.querySelector(".preview-image");
+
+  addPreviewBlock.style.display = "flex";
+  previewContainer.style.display = "none";
+
+  if (previewImage) {
+    previewImage.remove();
+  }
+}
+
+// Valide les champs du formulaire
+function validateFields() {
+  const image = document.querySelector("#photoInput");
+  const titre = document.querySelector("#titreAjoutPhoto");
+  const categorie = document.querySelector("#categorieAjoutPhoto");
+  const acceptAddPhoto = document.querySelector("#acceptAddPhoto");
+
+  if (
+    image.value.length > 0 &&
+    titre.value.length > 0 &&
+    categorie.value.length > 0
+  ) {
+    acceptAddPhoto.style.backgroundColor = "#1D6154";
+  } else {
+    acceptAddPhoto.style.backgroundColor = "#A7A7A7";
+  }
+}
+
+refreshWorksGallery();

@@ -103,9 +103,9 @@ li:hover {
 	color: #B1663C;
 }
 
-a:visited {
+a {
 	text-decoration: none;
-	color: black;
+	color: inherit;
   }
 a:hover:visited{
 	color: #B1663C;
@@ -218,7 +218,7 @@ input[type="submit"]{
 	margin : 2em auto ;
 	width: 180px;
 	text-align: center;
-	border-radius: 60px ;
+	border-radius: 60px 
 }
 
 #login {
@@ -231,8 +231,7 @@ input[type="submit"]{
 	display: flex;
 	flex-direction: column;
 	text-align: left;
-	width: 50%;
-	
+	width: 30%;
 }
 
 #form input {
@@ -240,8 +239,6 @@ input[type="submit"]{
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-	
-	
 }
 
 #form label {
@@ -264,6 +261,12 @@ input[type="submit"]{
 	border-radius: 60px ;
 	padding: 10px;
 	font-size: 1.2em;
+	border: none;
+}
+
+#form a {
+	text-align: center;
+	text-decoration: underline;
 }
 
 /****Mode édition****/
@@ -336,13 +339,18 @@ input[type="submit"]{
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-.modal input {
-		font-size: 1.2em;
-		border: none;
-		box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-		width: 40%;
-		padding: 10px;
-		margin: 15px;	
+#ajouterPhoto {
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+	padding: 10px;
+	font-size: 1.2em;
+	border: none;
 }
 
 .modal h3 {
@@ -425,9 +433,13 @@ span.closeModalButton {
 
 #acceptAddPhoto {
 	background-color: #A7A7A7;
-	width: 40%;
+	width: 180px;
 	align-self: center;
 	cursor: pointer;
+	border: none;
+	font-size: 1.2em;
+	padding: 10px;
+	
 }
 
 #uploadButton {
@@ -470,6 +482,8 @@ fieldset {
 	margin: 10px 0;
 	width: 100%;
 	padding: 10px 0;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 	
 }
 

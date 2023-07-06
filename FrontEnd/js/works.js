@@ -131,7 +131,7 @@ async function initializeModal(works ) {
     e.preventDefault();
     modal.style.display = "flex";
     addWork.style.display = "none";
-    showModalGallery(works); // lancer la fonction qui permet de visualiser les works dans la galeri
+    showModalGallery(works); // lancer la fonction qui permet de visualiser les works dans la galerie
     workModal(); // modal pour ajouter les images
   });
 
@@ -144,7 +144,7 @@ async function initializeModal(works ) {
     });
   }
 
-  // Ferme la fenêtre modale lors du clic en dehors du contenu du modal
+  // Ferme la fenêtre modale lors du clic en dehors du contenu de la modale
   window.addEventListener("click", function (e) {
     if (e.target === modal) {
       modal.style.display = "none";
